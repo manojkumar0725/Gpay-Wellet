@@ -1,0 +1,9 @@
+CREATE DATABASE mydb;
+CREATE TABLE users( id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100),
+userid VARCHAR(100),
+password VARCHAR(100),
+mobile VARCHAR(10),
+email VARCHAR(100),
+epassword VARCHAR(100)
+);

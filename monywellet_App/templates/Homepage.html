@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A new web page">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" href="favicon.ico">
+    <title>Wallet Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+</head>
+<body>
+
+  <div class="container-fluid container-md p-0 shadow-sm bg-white min-vh-100" style="max-width: 576px;">
+    
+    <div class="bg-primary p-3 d-flex align-items-center justify-content-between sticky-top shadow-sm rounded-bottom-4">
+      <a href="{{ url_for('about') }}" class="d-block flex-shrink-0">
+        {% if profile_pic and profile_pic != 'default.png' %}
+          <img id="homeTopProfileDisplay" src="{{ url_for('static', filename='uploads/profile_pics/' + profile_pic) }}" class="rounded-circle border border-2 border-white shadow-sm" width="40px" height="40px" style="object-fit: cover;">
+        {% else %}
+          <img id="homeTopProfileDisplay" src="{{ url_for('static', filename='images/logo.png') }}" class="rounded-circle border border-2 border-white shadow-sm" width="40px" height="40px" style="object-fit: cover;">
+        {% endif %}
+      </a>
+      <div class="w-100 ms-3">
+        <form action="#" method="GET" class="m-0" onsubmit="return false;">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-0 rounded-start-pill text-muted"><i class="bi bi-search"></i></span>
+            <input type="search" placeholder="Searching..." id="userSearchInput" autocomplete="off" class="form-control border-0 rounded-end-pill py-2 ps-1 shadow-sm search-input text-dark" style="background-color: #ffffff;">
+          </div>
+        </form>
+        <div id="searchResultDisplay" class="mt-2 fw-bold text-white small ps-2" style="display: none;">
+          <a id="searchUserChatLink" href="#" class="text-decoration-none d-flex align-items-center gap-2 p-1">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" class="rounded-circle border border-muted" width="32px" height="32px" alt="user profile" style="object-fit: cover;">
+            <span id="searchResultName" class="fw-bold text-dark small"></span>
+          </a>
+        </div>
+      </div>
+        <a href="{{ url_for('chat_list') }}" class="text-white text-decoration-none flex-shrink-0 position-relative ps-2">
+          <i class="bi bi-chat-dots fs-3"></i>
+        </a>
+    </div>
+
+    <div class="p-3 my-2">
+      <div class="row g-2 text-center justify-content-center">
+        
+        <div class="col-4">
+          <a href="{{ url_for('tranfer') }}" class="text-decoration-none d-block p-3 rounded-4 bg-light shadow-sm text-dark feature-card">
+            <div class="text-primary mb-1">
+              <i class="bi bi-cash-coin fs-1"></i>
+            </div>
+            <p class="small fw-bold m-0" style="font-size: 12px;">{{ trans('sent_any') }}</p>
+          </a>
+        </div>  
+        
+        <div class="col-4">
+          <a href="#" class="text-decoration-none d-block p-3 rounded-4 bg-light shadow-sm text-dark feature-card">
+            <div class="text-success mb-1">
+              <i class="bi bi-bank fs-1"></i>
+            </div>
+            <p class="small fw-bold m-0" style="font-size: 12px;">{{ trans('bank_transfer') }}</p>  
+          </a>
+        </div>  
+        
+        <div class="col-4">
+          <a href="#" class="text-decoration-none d-block p-3 rounded-4 bg-light shadow-sm text-dark feature-card">
+            <div class="text-warning mb-1">
+              <i class="bi bi-phone fs-1"></i>
+            </div>
+            <p class="m-0 small fw-bold" style="font-size: 12px;">{{ trans('mobile_recharge') }}</p>  
+          </a>
+        </div>  
+
+      </div>
+    </div>
+
+    <div class="text-center my-4 px-3">
+      <img src="{{ url_for('static', filename='images/homepage.png') }}" class="img-fluid rounded-4 shadow-sm" style="max-height: 180px; width: auto; object-fit: contain;" alt="homepage banner">
+    </div>
+
+    <div class="px-3 mb-5">
+      <div class="row g-3">
+        
+        <div class="col-12 col-sm-6">
+          <div class="card border-0 shadow-sm text-center h-100 feature-card bg-light p-2">
+            <div class="card-body d-flex flex-column justify-content-between align-items-center">
+              <div>
+                <i class="bi bi-arrow-left-right fs-2 text-primary mb-2 d-block"></i>
+                <h5 class="card-title fw-bold text-dark">{{ trans('transaction_check') }}</h5>
+                <p class="card-text text-muted small px-2">{{ trans('transaction') }} {{ trans('view_history') }}</p>
+              </div>
+                <a href="{{ url_for('tranfer') }}" class="btn btn-primary w-100 rounded-pill py-2 mt-2 fw-medium shadow-sm">{{ trans('view_history') }}</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-12 col-sm-6">
+          <div class="card border-0 shadow-sm text-center h-100 feature-card bg-light p-2">
+            <div class="card-body d-flex flex-column justify-content-between align-items-center">
+              <div>
+                <i class="bi bi-currency-rupee text-success fs-1 mb-1 d-block"></i>
+                <h5 class="card-title fw-bold text-dark">{{ trans('balance_amount') }}</h5>
+                <p class="card-text text-muted small px-2">{{ trans('current_balance') }}</p>
+              </div>
+              <a href="{{ url_for('pin') }}" class="btn btn-success w-100 rounded-pill py-2 mt-2 fw-medium shadow-sm">{{ trans('check_balance') }}</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div> <div class="fixed-bottom fixed-bottom-nav py-2 border-top">
+    <div class="container" style="max-width: 576px;">
+      <div class="row text-center align-items-center m-0">
+        
+        <div class="col-4">
+          <a href="{{ url_for('home') }}" class="text-decoration-none text-primary fw-bold d-block">
+            <i class="bi bi-house-door-fill fs-3"></i>
+            <p class="mb-0" style="font-size: 11px;">{{ trans('home') }}</p>
+          </a>
+        </div>
+        
+        <div class="col-4">
+          <a href="{{ url_for('pin') }}" class="text-decoration-none text-secondary d-block">
+            <i class="bi bi-currency-rupee fs-3 text-success  p-2 "></i>
+            <p class="mb-0 mt-1" style="font-size: 11px;">Money</p>
+          </a>
+        </div>
+        
+        <div class="col-4">
+          <a href="{{ url_for('about') }}" class="text-decoration-none text-secondary d-block">
+    
+            {% if profile_pic and profile_pic != 'default.png' %}
+              <img id="homeBottomNavDisplay" src="{{ url_for('static', filename='uploads/profile_pics/' + profile_pic) }}" class="rounded-circle border mb-1" width="28px" height="28px" alt="Profile" style="object-fit: cover;">
+            {% else %}
+              <img id="homeBottomNavDisplay" src="{{ url_for('static', filename='images/logo.png') }}" class="rounded-circle border mb-1" width="28px" height="28px" alt="Default logo" style="object-fit: cover;">
+            {% endif %}
+            <p class="mb-0" style="font-size: 11px;">{{ trans('about') }}</p>
+  </a>
+</div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/balance.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
+</body>
+</html>

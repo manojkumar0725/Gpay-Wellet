@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A new web page">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" href="favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <title>Balance Views</title>
+</head>
+<body>
+    <div class="container mt-3">
+        <div class="d-flex justify-content-between mb-3">
+                <a href="{{ url_for('home') }}" class="text-decoration-none text-dark">
+                    <i class="bi bi-arrow-left fs-1"></i>
+                </a>
+                <i class="bi bi-three-dots-vertical fs-1"></i>
+                
+        </div>
+        
+        <div class="container bg-dark bg-opacity-10 rounded mb-4">
+            <p class="pt-2 mb-0"><b>{{ trans('balance_amount') }}</b></p>
+            <p class="pb-3 fs-3">₹{{ balance }}</p>
+        </div>
+        
+        <div class="container">
+            <h4>{{ trans('transaction') }}</h4><hr>
+            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{{ trans('names') }}</th>
+                        <th class="text-end">{{ trans('amount_col') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# இங்குதான் டேட்டாபேஸ் தகவல்கள் லூப் செய்யப்பட்டு காட்டப்படுகின்றன #}
+                    {% for row in transactions %}
+                    <tr>
+                        <td>
+                            {{ row.name }} 
+                            {% if row.type == 'Sent' %}
+                                <span class="badge bg-danger ms-2">{{ trans('sent') }}</span>
+                            {% else %}
+                                <span class="badge bg-success ms-2">{{ trans('received') }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small>{{ row.timestamp }}</small>
+                        </td>
+                        <td class="text-end {% if row.type == 'Sent' %}text-danger{% else %}text-success{% endif %}">
+                            {% if row.type == 'Sent' %}-{% else %}+{% endif %}₹{{ row.amount }}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2" class="text-center text-muted">{{ trans('no_transactions') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

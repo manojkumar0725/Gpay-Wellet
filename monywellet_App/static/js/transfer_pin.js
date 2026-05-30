@@ -1,0 +1,31 @@
+document.getElementById('pinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const pinValue = document.getElementById('pinInput').value;
+            const errorDiv = document.getElementById('error-msg');
+            
+            // பேக்-எண்ட் பைத்தான் கோடிற்கு டேட்டாவை அனுப்புகிறோம்
+            fetch('/transfer_check_pin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ pin: pinValue })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // பின் சரியாக இருந்தால், பைத்தான் சொல்லும் இடத்திற்கு (balance.html) அழைத்துச் செல்லும்
+                    window.location.href = data.redirect;
+                } else {
+                    // பின் தவறாக இருந்தால் எரர் காட்டும்
+                    errorDiv.textContent = data.message;
+                    errorDiv.classList.remove('d-none');
+                    document.getElementById('pinInput').value = ''; // இன் புட்டை கிளியர் செய்கிறது
+                }
+            })
+            .catch(err => {
+                errorDiv.textContent = "{{ trans('pin_error') }}";
+                errorDiv.classList.remove('d-none');
+            });
+        });

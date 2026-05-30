@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with {{ receiver_name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+</head>
+<body class="bg-light">
+    <div class="container bg-white min-vh-100 p-0 d-flex flex-column shadow-sm" style=\"max-width: 576px;\">
+        
+        <div class="bg-primary p-3 text-white d-flex align-items-center gap-2">
+            <a href="{{ url_for('chat_list') }}" class="text-white me-2"><i class="bi bi-arrow-left fs-4"></i></a>
+            <img src="{{ url_for('static', filename='images/logo.png') }}" class="rounded-circle border border-white" width="40" height="40">
+            <div>
+                <h6 class="m-0 fw-bold">{{ receiver_name }}</h6>
+                <small class="text-white-50" style="font-size: 11px;">ID: {{ receiver_id }}</small>
+            </div>
+        </div>
+
+        <div class="flex-grow-1 p-3 chat-box" id="chatBox">
+            <div class="text-center my-2 text-muted small">
+                <i class="bi bi-lock-fill"></i> Messages are end-to-end encrypted
+            </div>
+            
+            <div id="messagesList">
+                {% for msg in chat_messages %}
+                    {% set s_id = msg.sender_id if msg.sender_id is defined else msg[0] %}
+                    {% set m_text = msg.message if msg.message is defined else msg[2] %}
+                    {% set m_time = msg.msg_time if msg.msg_time is defined else msg[3] %}
+                    {% set read_status = msg.is_read if msg.is_read is defined else msg[4] %}
+
+                    {% if s_id == current_user %}
+                        <div class="d-flex justify-content-end mb-2">
+                            <div class="msg-box msg-sent text-dark shadow-sm">
+                                <div class="text-start">{{ m_text }}</div>
+                                <div class="msg-meta">
+                                    <span>{{ m_time }}</span>
+                                    
+                                    {% if read_status == 1 %}
+                                        <i class="bi bi-check2-all tick-blue" title="Read"></i>
+                                    {% else %}
+                                        <i class="bi bi-check2 text-muted" title="Sent"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="d-flex justify-content-start mb-2">
+                            <div class="msg-box msg-received text-dark shadow-sm">
+                                <div class="text-start">{{ m_text }}</div>
+                                <div class="msg-meta text-muted">
+                                    <span>{{ m_time }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="p-3 bg-light border-top">
+            <form id="chatForm" class="d-flex gap-2 m-0">
+                <input type="hidden" id="receiverId" value="{{ receiver_id }}">
+                <input type="text" id="messageInput" placeholder="Type a message..." class="form-control rounded-pill px-3" required autocomplete="off">
+                <button type="submit" class="btn btn-primary rounded-circle"><i class="bi bi-send-fill"></i></button>
+            </form>
+        </div>
+
+    </div>
+
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+
+</html>
